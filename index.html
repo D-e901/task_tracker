@@ -15,20 +15,38 @@
                 <h2>Créer une tâche:</h2>
             </div>
 
-            <form action="">
+            <div class="form-container">
+                <form action="">
 
-                <label for="title">Libellé: </label>
-                <input type="text" id="title" name="libel" placeholder="Le libellé de la tâche">
+                    <label for="title">Libellé: </label>
+                    <input type="text" id="title" name="libel" placeholder="Le libellé de la tâche">
 
-                <label for="description">Description: </label>
-                <textarea id="description" name="descript" placeholder="Décrivez ce que vous souhaitez accomplir comme tâche...." cols="30" rows="10">                    
-                </textarea>
+                    <label for="description">Description: </label>
+                    <textarea id="description" name="descript" placeholder="Décrivez ce que vous souhaitez accomplir comme tâche...." cols="30" rows="10">Décrivez ce que vous souhaitez accomplir comme tâche....</textarea>
 
-                <button onclick="setItem()" type="submit" id="addTaskBtn" class="btn add-btn">Enregistrer</button>
-            </form>
+                    <button onclick="setItem()" type="submit" id="addTaskBtn" class="btn add-btn">Enregistrer</button>
+                </form>
+            </div>
         </div>
         
         <div class="main">
+
+            <div class="header">
+                <h2>Liste des tâches</h2>
+            </div>
+
+            <table id="taskTable" class="table-task">
+                <thead>
+                    <tr>
+                        <th>Libellé</th>
+                        <th>Opérations</th>
+                    </tr>
+                </thead>
+
+                <tbody id="taskBody">
+
+                </tbody>
+            </table>
         </div>
 
     </div>

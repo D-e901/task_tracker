@@ -17,14 +17,109 @@ body{
     width: 100%;
 }
 
+.header h2{
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
 .form-side{
     grid-area: form-side;
     background: blue;
     height: 100%;
     width: 100%;
+    background: #ccdbd9;
+    padding: 2rem;
 }
+
+.form-container form{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+    padding-top: 8px;
+}
+
+.form-container input, textarea{
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    margin-top: 10px;
+    background: #fffff7;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-container label{
+    padding-top: 5px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.form-container button[type="submit"] {
+    margin-top: 25px;
+    padding: 10px;
+    background-color: #2bc48a;
+    border: 1px solid #2bc48a;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #ccdbd9;
+    border: 1px solid #fffff7;
+    cursor: pointer;
+    color: #2bc48a;
+}
+
 
 .main{
     grid-area: main;
-    background: rgb(40, 90, 90);
+    background: whitesmoke;
+    height: 100%;
+    width: 100%;
+    padding: 2rem;
+}
+
+.table-task {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 1rem;
+  text-align: left;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+}
+
+.table-task thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+  text-align: center;
+}
+
+.table-task th,
+.table-task td {
+  padding: 12px 15px;
+  border: 1px solid #dddddd;
+}
+
+.table-task tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.table-task tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table-task tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
 }
