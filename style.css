@@ -123,3 +123,26 @@ body{
 .table-task tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
 }
+
+.table-task tbody tr td button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.table-task tbody tr td button svg{
+  width: 20px;
+  height: 20px;
+  color: cadetblue;
+}
+
+.draft{
+    color: cadetblue;
+}
+.in-progress{
+    color: #ff3;
+}
+.done{
+    color: #009879;
+}
