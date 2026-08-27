@@ -1,4 +1,30 @@
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body{
+    height: 100vh;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    grid-template-areas: 'form-side main';
+    height: 100%;
+    width: 100%;
+}
+
+.form-side{
+    grid-area: form-side;
+    background: blue;
+    height: 100%;
+    width: 100%;
+}
+
+.main{
+    grid-area: main;
+    background: rgb(40, 90, 90);
 }
