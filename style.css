@@ -110,6 +110,7 @@ body{
 .table-task td {
   padding: 12px 15px;
   border: 1px solid #dddddd;
+  vertical-align: middle;
 }
 
 .table-task tbody tr {
@@ -124,25 +125,72 @@ body{
   border-bottom: 2px solid #009879;
 }
 
-.table-task tbody tr td button {
-  margin-left: 5px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-.table-task tbody tr td button svg{
-  width: 20px;
-  height: 20px;
-  color: cadetblue;
+.task-title {
+  font-weight: 600;
+  color: #222;
 }
 
-.draft{
-    color: cadetblue;
+.task-desc {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #777;
 }
-.in-progress{
-    color: #ff3;
+
+/* ---------------------------------------------------------
+   Badges de statut : bleu = brouillon, jaune = en cours,
+   vert = terminé.
+   --------------------------------------------------------- */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
-.done{
-    color: #009879;
+
+.status-draft {
+  background-color: #d6e9ff;
+  color: #1a5aa8;
+}
+
+.status-ongoing {
+  background-color: #fff2b8;
+  color: #8a6d00;
+}
+
+.status-done {
+  background-color: #cdf3e0;
+  color: #0a7a4d;
+}
+
+.ops-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Bouton "Démarrer / Terminer" : seule action possible sur une tâche. */
+.btn-advance {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #f0ad00;
+}
+
+.btn-advance:hover {
+  opacity: 0.85;
+}
+
+/* Une fois "Terminé", il n'y a plus de bouton : juste un texte indiquant
+   que le statut est verrouillé. */
+.locked-label {
+  font-size: 0.78rem;
+  color: #999;
+  font-style: italic;
 }
