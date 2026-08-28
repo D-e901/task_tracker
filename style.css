@@ -1,58 +1,58 @@
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body{
-    height: 100vh;
+  height: 100vh;
 }
 
 .container{
-    display: grid;
-    grid-template-columns: 3fr 7fr;
-    grid-template-areas: 'form-side main';
-    height: 100%;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  grid-template-areas: 'form-side main';
+  height: 100%;
+  width: 100%;
 }
 
 .header h2{
-    margin: 10px 0;
-    font-size: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
+  margin: 10px 0;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .form-side{
-    grid-area: form-side;
-    background: blue;
-    height: 100%;
-    width: 100%;
-    background: #ccdbd9;
-    padding: 2rem;
+  grid-area: form-side;
+  background: blue;
+  height: 100%;
+  width: 100%;
+  background: #ccdbd9;
+  padding: 2rem;
 }
 
 .form-container form{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    flex-direction: column;
-    padding-top: 8px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  padding-top: 8px;
 }
 
 .form-container input, textarea{
-    width: 100%;
-    padding: 13px 50px 13px 20px;
-    margin-top: 10px;
-    background: #fffff7;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
+  width: 100%;
+  padding: 13px 50px 13px 20px;
+  margin-top: 10px;
+  background: #fffff7;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
 }
 
 .form-container label{
@@ -113,6 +113,20 @@ body{
   vertical-align: middle;
 }
 
+
+.table-task tbody tr td button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.table-task tbody tr td button svg{
+  width: 20px;
+  height: 20px;
+  color: cadetblue;
+}
+
 .table-task tbody tr {
   border-bottom: 1px solid #dddddd;
 }
@@ -136,10 +150,6 @@ body{
   color: #777;
 }
 
-/* ---------------------------------------------------------
-   Badges de statut : bleu = brouillon, jaune = en cours,
-   vert = terminé.
-   --------------------------------------------------------- */
 .status-badge {
   display: inline-block;
   padding: 5px 12px;
@@ -149,6 +159,8 @@ body{
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  border: none;         
+  font-family: inherit;
 }
 
 .status-draft {
@@ -166,31 +178,15 @@ body{
   color: #0a7a4d;
 }
 
-.ops-cell {
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* Bouton "Démarrer / Terminer" : seule action possible sur une tâche. */
-.btn-advance {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
+.status-badge.is-clickable {
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #f0ad00;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.btn-advance:hover {
-  opacity: 0.85;
+.status-badge.is-clickable:hover {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
 }
 
-/* Une fois "Terminé", il n'y a plus de bouton : juste un texte indiquant
-   que le statut est verrouillé. */
-.locked-label {
-  font-size: 0.78rem;
-  color: #999;
-  font-style: italic;
+.status-badge.is-clickable:active {
+  transform: scale(0.96);
 }

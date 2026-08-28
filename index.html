@@ -12,12 +12,11 @@
         <div class="form-side">
 
             <div class="header">
-                <h2>Créer une tâche:</h2>
+                <h2 id="form-title">Créer une tâche:</h2>
             </div>
 
             <div class="form-container">
-                <!-- Le "submit" est intercepté en JS pour ne pas recharger la page
-                     (voir form.addEventListener("submit", ...) plus bas). -->
+                
                 <form id="taskForm">
 
                     <label for="title">Libellé: </label>
@@ -55,27 +54,16 @@
     </div>
 
     <script>
-        /* =========================================================
-           ÉTAT
-           ========================================================= */
-
-        // Ordre des statuts possibles. L'index dans ce tableau représente
-        // la progression : on ne peut avancer que vers l'index suivant,
-        // jamais revenir en arrière. C'est ça qui garantit l'irréversibilité.
+        
         const STATUS_FLOW = ["draft", "ongoing", "done"];
 
-        // Libellé, classe CSS (couleur) et texte du bouton "étape suivante"
-        // associés à chaque statut.
         const STATUS_META = {
-            draft:   { label: "Brouillon", cssClass: "status-draft",   nextLabel: "Démarrer →" },
-            ongoing: { label: "En cours",  cssClass: "status-ongoing", nextLabel: "Terminer ✓" },
-            done:    { label: "Terminé",   cssClass: "status-done",    nextLabel: null } // null = pas d'étape suivante
+            draft:   { label: "Brouillon", cssClass: "status-draft",   hint: "Cliquer pour démarrer" },
+            ongoing: { label: "En cours",  cssClass: "status-ongoing", hint: "Cliquer pour terminer" },
+            done:    { label: "Terminé",   cssClass: "status-done",    hint: null }
         };
 
-        /* =========================================================
-           RÉFÉRENCES AUX ÉLÉMENTS DU DOM
-           ========================================================= */
-
+        const formTitle = document.getElementById("form-title");
         const form = document.getElementById("taskForm");
         const titleInput = document.getElementById("title");
         const descriptionInput = document.getElementById("description");
@@ -83,40 +71,46 @@
 
         document.addEventListener("DOMContentLoaded", loadTasks);
 
-        // On écoute le "submit" du formulaire (déclenché par Entrée ou par clic
-        // sur "Enregistrer") et on empêche le rechargement de la page.
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             addTask();
         });
 
-
-        /* =========================================================
-           STOCKAGE (localStorage)
-           ========================================================= */
-
         function getTasksFromLocalStorage() {
-            const tasks = localStorage.getItem("tasks");
-            return tasks ? JSON.parse(tasks) : [];
+            const raw = localStorage.getItem("tasks");
+            if (!raw) 
+                return [];
+
+            let tasks;
+            try {
+                tasks = JSON.parse(raw);
+            } catch (e) {
+
+                return [];
+            }
+
+            if (!Array.isArray(tasks)) 
+                return [];
+
+            return tasks.map(function (task) {
+                if (typeof task === "string") {
+                    return { title: task, description: "", status: "draft" };
+                }
+                return {
+                    title: task.title || "",
+                    description: task.description || "",
+                    status: STATUS_FLOW.includes(task.status) ? task.status : "draft"
+                };
+            });
         }
 
         function saveTasksToLocalStorage(tasks) {
             localStorage.setItem("tasks", JSON.stringify(tasks));
         }
 
-
-        /* =========================================================
-           CHARGEMENT INITIAL
-           ========================================================= */
-
         function loadTasks() {
             displayTasks();
         }
-
-
-        /* =========================================================
-           CRÉATION D'UNE TÂCHE
-           ========================================================= */
 
         function addTask() {
             const titleValue = titleInput.value.trim();
@@ -129,7 +123,6 @@
 
             const tasks = getTasksFromLocalStorage();
 
-            // Toute nouvelle tâche démarre obligatoirement à "draft".
             tasks.push({
                 title: titleValue,
                 description: descriptionValue,
@@ -143,13 +136,6 @@
             displayTasks();
         }
 
-
-        /* =========================================================
-           PROGRESSION DE STATUT (draft -> ongoing -> done, jamais l'inverse)
-           ========================================================= */
-
-        // Renvoie le statut suivant dans STATUS_FLOW, ou null si on est
-        // déjà au dernier statut ("done" n'a pas de suite).
         function getNextStatus(currentStatus) {
             const currentIndex = STATUS_FLOW.indexOf(currentStatus);
             const nextIndex = currentIndex + 1;
@@ -161,20 +147,12 @@
             const task = tasks[index];
             const next = getNextStatus(task.status);
 
-            // Si next est null (tâche déjà "done"), on ne fait rien : c'est la
-            // SEULE fonction qui modifie le statut, et elle n'avance que
-            // d'une étape à la fois. Il n'y a donc aucun moyen de reculer.
             if (next) {
                 task.status = next;
                 saveTasksToLocalStorage(tasks);
                 displayTasks();
             }
         }
-
-
-        /* =========================================================
-           AFFICHAGE
-           ========================================================= */
 
         function displayTasks() {
             const tasks = getTasksFromLocalStorage();
@@ -184,10 +162,11 @@
                 const meta = STATUS_META[task.status];
                 const row = document.createElement("tr");
 
-                // Le bouton d'avancement n'est généré que si un statut suivant existe.
-                const advanceButtonHtml = meta.nextLabel
-                    ? `<button class="btn-advance" onclick="advanceTaskStatus(${index})" title="Cette action est définitive">${meta.nextLabel}</button>`
-                    : `<span class="locked-label">Statut final</span>`;
+                const badgeHtml = meta.hint
+                    ? `<button type="button" class="status-badge ${meta.cssClass} is-clickable" onclick="advanceTaskStatus(${index})"
+                               title="${meta.hint} (action définitive)">${meta.label}
+                        </button>`
+                    : `<span class="status-badge ${meta.cssClass}">${meta.label}</span>`;
 
                 row.innerHTML = `
                         <td>
@@ -195,14 +174,77 @@
                             ${task.description ? `<div class="task-desc">${task.description}</div>` : ""}
                         </td>
                         <td>
-                            <span class="status-badge ${meta.cssClass}">${meta.label}</span>
+                            ${badgeHtml}
                         </td>
-                        <td class="ops-cell">
-                            ${advanceButtonHtml}
+                        <td>
+                            <button onclick="editTask(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                                </svg>
+                            </button>
+
+                            <button onclick="deleteTask(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
                         </td>
                     `;
                 taskBody.appendChild(row);
             });
+        }
+
+        function editTask(index) {
+            const tasks = getTasksFromLocalStorage();
+            const task = tasks[index];
+
+            titleInput.value = task.title;
+            descriptionInput.value = task.description;
+            editingIndex = index;
+
+            addBtn.textContent = "Modifier";
+            formTitle.textContent = "Modifier la tâche :";
+            titleInput.focus();
+        }
+
+        function exitEditMode() {
+            editingIndex = null;
+            addBtn.textContent = "Enregistrer";
+            formTitle.textContent = "Créer une tâche:";
+        }
+
+        function deleteTask(index) {
+            // const confirmed = window.confirm("Supprimer définitivement cette tâche ?");
+            // if (!confirmed) return;
+
+            const tasks = getTasksFromLocalStorage();
+            tasks.splice(index, 1);
+            saveTasksToLocalStorage(tasks);
+
+            if (editingIndex === index) {
+                titleInput.value = "";
+                descriptionInput.value = "";
+                exitEditMode();
+            }
+
+            displayTasks();
+        }
+
+        function getNextStatus(currentStatus) {
+            const currentIndex = STATUS_FLOW.indexOf(currentStatus);
+            const nextIndex = currentIndex + 1;
+            return nextIndex < STATUS_FLOW.length ? STATUS_FLOW[nextIndex] : null;
+        }
+
+        function advanceTaskStatus(index) {
+            const tasks = getTasksFromLocalStorage();
+            const task = tasks[index];
+            const next = getNextStatus(task.status);
+            if (next) {
+                task.status = next;
+                saveTasksToLocalStorage(tasks);
+                displayTasks();
+            }
         }
     </script>
 
