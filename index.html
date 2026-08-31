@@ -123,11 +123,17 @@
 
             const tasks = getTasksFromLocalStorage();
 
-            tasks.push({
-                title: titleValue,
-                description: descriptionValue,
-                status: "draft"
-            });
+            if (editingIndex !== null) {
+                tasks[editingIndex].title = titleValue;
+                tasks[editingIndex].description = descriptionValue;
+                exitEditMode();
+            } else {
+                tasks.push({
+                    title: titleValue,
+                    description: descriptionValue,
+                    status: "draft"
+                });
+            }
 
             saveTasksToLocalStorage(tasks);
 
