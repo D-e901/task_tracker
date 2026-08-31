@@ -63,9 +63,12 @@
             done:    { label: "Terminé",   cssClass: "status-done",    hint: null }
         };
 
+        let editingIndex = null;
+
         const formTitle = document.getElementById("form-title");
         const form = document.getElementById("taskForm");
         const titleInput = document.getElementById("title");
+        const addTaskBtn = document.getElementById("addTaskBtn");
         const descriptionInput = document.getElementById("description");
         const taskBody = document.getElementById("taskBody");
 
@@ -208,14 +211,16 @@
             descriptionInput.value = task.description;
             editingIndex = index;
 
-            addBtn.textContent = "Modifier";
+            addTaskBtn.textContent = "Modifier";
+            addTaskBtn.classList.add("is-editing");
             formTitle.textContent = "Modifier la tâche :";
             titleInput.focus();
         }
 
         function exitEditMode() {
             editingIndex = null;
-            addBtn.textContent = "Enregistrer";
+            addTaskBtn.textContent = "Enregistrer";
+            addTaskBtn.classList.add("is-editing");
             formTitle.textContent = "Créer une tâche:";
         }
 

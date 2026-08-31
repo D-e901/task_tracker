@@ -79,6 +79,15 @@ body{
     color: #2bc48a;
 }
 
+.form-container button[type="submit"].is-editing {
+    background-color: #2b7fc4;
+    border: 1px solid #2b7fc4;
+}
+
+.form-container button[type="submit"].is-editing:hover {
+    background-color: #2468a3;
+    border: 1px solid #2468a3;
+}
 
 .main{
     grid-area: main;
